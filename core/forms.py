@@ -7,6 +7,7 @@ from django.utils.encoding import force_bytes
 from django.utils.http import urlsafe_base64_encode
 from .tokens import account_activation_token as default_token_generator
 from django.conf import settings
+from .models import User
 
 
 def send__activation_mail(user, use_https=False):
@@ -38,9 +39,11 @@ def send__activation_mail(user, use_https=False):
 
 
 class UserCreationForm(BaseCreationForm):
+
     class Meta:
+        model = User
         fields = (
-            'email', 'name',
+             'name', 'email',
             'password1', 'password2',
         )
 
