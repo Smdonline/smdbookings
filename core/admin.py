@@ -4,7 +4,7 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
 # Register your models here.
 from .models import User
-from . import forms
+from . import utils
 from django.contrib.sites.models import Site
 
 
@@ -13,7 +13,7 @@ def sent_user_activation_link(modeladmin, request, queryset):
     for obj in queryset:
         user = get_object_or_404(get_user_model(), pk=obj.pk)
         if not user.is_active:
-            forms.send__activation_mail(user)
+            utils.send__activation_mail(user)
 
 
 @admin.register(User)

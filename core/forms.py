@@ -1,13 +1,16 @@
-
+from django import forms
 from django.contrib.auth.forms import UserCreationForm as BaseCreationForm
-from utils import send__activation_mail
+from .models import User
+from .utils import send__activation_mail
 
 
 
 class UserCreationForm(BaseCreationForm):
+
     class Meta:
+        model = User
         fields = (
-            'email', 'name',
+             'name', 'email',
             'password1', 'password2',
         )
 
