@@ -6,6 +6,7 @@ from django.shortcuts import get_object_or_404
 from .models import User
 from . import utils
 from django.contrib.sites.models import Site
+from . import forms
 
 
 @admin.action(description="send user activation link")
