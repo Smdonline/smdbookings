@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm as BaseCreationForm
-from django.contrib.auth.forms import UserChangeForm
+from django.contrib.auth.forms import UserChangeForm as BaseUserChangeForm
 from .models import User
 from .utils import send__activation_mail
 
@@ -22,3 +22,9 @@ class UserCreationForm(BaseCreationForm):
         if not user.is_active:
             send__activation_mail(user)
         return user
+
+
+class UserChangeForm(BaseUserChangeForm):
+    class Meta:
+        model = User
+        fields = ('name',)
