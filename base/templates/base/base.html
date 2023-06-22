@@ -1,0 +1,14 @@
+{% extends 'base/base_main.html' %}
+{% block nav %}
+    {% block nav_login_link %}
+        <li>
+            <a href="{% url 'users:login' %}">Login</a>
+        </li>
+    {% endblock %}
+    {% block nav_register_block %}
+        <li>
+            <a href="{% url 'users:register' %}">Register</a>
+        </li>
+    {% endblock %}
+
+{% endblock %}

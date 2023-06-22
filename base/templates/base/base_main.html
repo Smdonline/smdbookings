@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>
+        {% block title %}
+            {{ request.site.name }}
+        {% endblock %}
+    </title>
+    {% block extra_css %}
+
+    {% endblock %}
+</head>
+<body>
+<nav>
+    <ul style="list-style: none;flex-direction: row;">
+        <li>
+            <a href="{% url 'base:main' %}">Home</a>
+        </li>
+        {% block nav %}
+
+
+
+        {% endblock %}
+    </ul>
+</nav>
+
+{% block context %}
+    book here your next party
+{% endblock %}
+{% block extra_js %}
+
+{% endblock %}
+</body>
+</html>

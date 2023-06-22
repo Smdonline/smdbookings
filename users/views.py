@@ -11,7 +11,8 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.contrib.auth import logout
 from django.urls import reverse_lazy
 from django.contrib.auth.views import LoginView
-
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.views.generic import TemplateView
 
 
 def activate(request, uidb64, token):
@@ -38,4 +39,13 @@ class UserRegistration(CreateView):
 
 class UserLoginView(LoginView):
     template_name = 'users/auth/login.html'
-    next_page = reverse_lazy('users:regConfirmed')
+    next_page = reverse_lazy('users:profile')
+
+
+class Profile(LoginRequiredMixin, TemplateView):
+    login_url = reverse_lazy('users:login')
+    template_name = 'users/auth/profile.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        return data

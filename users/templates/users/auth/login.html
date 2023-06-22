@@ -1,16 +1,16 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
-<form action="" method="post">
+{% extends 'base/base.html' %}
 
-    {% csrf_token %}
-    {{ form }}
-    <input type="submit">
-</form>
+{% block nav_login_link %}
 
-</body>
-</html>
+{% endblock %}
+
+{% block context %}
+    <form action="" method="post">
+
+        {% csrf_token %}
+        {{ form }}
+        <input type="submit">
+    </form>
+
+{% endblock %}
+

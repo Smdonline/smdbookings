@@ -4,7 +4,7 @@
 
     {% translate "Please go to the following page to activate your account:" %}
     {% block reset_link %}
-        {{ protocol }}://{{ domain }}{{ port }}{% url 'activate' uidb64=uid token=token %}
+        {{ protocol }}://{{ domain }}{{ port }}{% url 'users:activate' uidb64=uid token=token %}
     {% endblock %}
     {% translate 'Your username, in case you’ve forgotten:' %} {{ user.get_username }}
 

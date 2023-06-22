@@ -8,8 +8,8 @@ from django.conf import settings
 
 
 def send__activation_mail(user, use_https=False):
-    subject_template_name = 'core/account_activation_subject.txt'
-    email_template_name = 'core/account_activation_email.html'
+    subject_template_name = 'users/registration/my_account_activation_subject.txt'
+    email_template_name = 'users/registration/my_account_activation_email.html'
     from_email = "activation@smdonline.net"
     to_email = user.email
     html_email_template_name = None

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'core',
     'users',
+    'base',
 ]
 
 MIDDLEWARE = [
