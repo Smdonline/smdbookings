@@ -1,16 +1,15 @@
 from django.views.generic import CreateView
 
-
-from django.shortcuts import render, HttpResponse, redirect, get_object_or_404
+from django.shortcuts import HttpResponse, redirect
 from core.tokens import account_activation_token
 from django.utils.encoding import force_str as force_text
 from django.contrib.auth import get_user_model
 from core.forms import UserCreationForm
 from core.models import User
-from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
-from django.contrib.auth import logout
+from django.utils.http import urlsafe_base64_decode
+
 from django.urls import reverse_lazy
-from django.contrib.auth.views import LoginView
+from django.contrib.auth.views import LoginView, PasswordChangeView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
@@ -49,3 +48,7 @@ class Profile(LoginRequiredMixin, TemplateView):
     def get_context_data(self, **kwargs):
         data = super().get_context_data(**kwargs)
         return data
+
+
+class ChangePasswordView(PasswordChangeView):
+    template_name = 'users/registration/password_change_form.html'

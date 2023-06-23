@@ -1,6 +1,5 @@
 from django.urls import path
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import TemplateView
 from . import views
 
 app_name = 'users'
@@ -13,4 +12,5 @@ urlpatterns = [
         name='regConfirmed'),
     path('profile/', views.Profile.as_view(), name='profile'),
     path(_('register/'), views.UserRegistration.as_view(), name="register"),
+    path(_('passwordChange/'), views.ChangePasswordView.as_view(), name="password_change"),
 ]
