@@ -9,7 +9,7 @@ from core.models import User
 from django.utils.http import urlsafe_base64_decode
 
 from django.urls import reverse_lazy
-from django.contrib.auth.views import LoginView, PasswordChangeView
+from django.contrib.auth.views import LoginView, PasswordChangeView, PasswordChangeDoneView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
@@ -52,3 +52,7 @@ class Profile(LoginRequiredMixin, TemplateView):
 
 class ChangePasswordView(PasswordChangeView):
     template_name = 'users/registration/password_change_form.html'
+    success_url = reverse_lazy('users:password_change_done')
+class MyPasswordChangeDoneView(PasswordChangeDoneView):
+    template_name = 'users/registration/password_change_done.html'
+
