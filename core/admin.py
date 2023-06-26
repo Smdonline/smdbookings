@@ -2,6 +2,8 @@ from django.contrib import admin
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from django.shortcuts import get_object_or_404
+
+import core.models
 # Register your models here.
 from .models import User
 from . import utils
@@ -24,4 +26,7 @@ class UserAdmin(admin.ModelAdmin):
     form = forms.UserCreationForm
 
 
+@admin.register(core.models.Address)
+class AddressAdmin(admin.ModelAdmin):
+    form = forms.AddressForm
 admin.site.unregister(Group)
