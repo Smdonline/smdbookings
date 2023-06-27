@@ -9,7 +9,15 @@ from django.contrib.auth.models import PermissionsMixin
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth import get_user_model
 from django_countries.fields import CountryField
+from datetime import timedelta
+from django.core.validators import ValidationError,MinValueValidator,MaxValueValidator
 from localflavor.it import forms, util
+
+days = [
+    (0, _("Monday")), (1, _("Tuesday")), (2, _("Wednesday")),
+    (3, _("Thursday")), (4, _("Friday")), (5, _("Saturday")),
+    (6, _("Sunday"))
+]
 
 
 class UserManager(BaseUserManager):
@@ -24,6 +32,7 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
 
         return user
+
     def create_superuser(self, email, password):
         """Create a superuser with email and password"""
         user = self.create_user(email=email, password=password)
@@ -61,6 +70,84 @@ class Address(models.Model):
     street_name = models.CharField(_('via'), max_length=255, blank=False)
     street_number = models.PositiveSmallIntegerField(_('numero civico'))
 
-
+def profile_upload_path(instance,filename):
+    ext = filename.split(".")[-1]
+    filename="%s.%s"%(instance.slug, ext)
+    import os
+    return os.path.join("locations/%s"%instance.slug, filename)
 class Location(models.Model):
     name = models.CharField(max_length=255, blank=False)
+    slug = models.SlugField(max_length=255,unique=True)
+    address = models.ForeignKey(Address,on_delete=models.CASCADE, default=None)
+    image = models.ImageField(_('location image'), upload_to=profile_upload_path, blank=True)
+    description = models.TextField(_('description'), default=None)
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+class Orari(models.Model):
+    location = models.ForeignKey(Location, on_delete=models.CASCADE, verbose_name='location_schedule',default=None
+                                 )
+    weekday = models.PositiveSmallIntegerField(
+        _('nome giorno settimana'), choices=days
+    )
+    start = models.TimeField(_('ora inizio'))
+    fine = models.TimeField(_('ora fine'))
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['weekday', 'start', 'location'],
+                name='unique_day_start',
+            )
+        ]
+        index_together = ('weekday', 'start')
+        verbose_name = _("orario apertura")
+        verbose_name_plural = _("orari apertura")
+
+    def get_day_name(self):
+        return days[self.weekday][1]
+
+    def _get_start_to_timedelta(self):
+        return timedelta(hours=self.start.hour, minutes=self.start.minute)
+
+    def _get_fine_to_timedelta(self):
+        fine = timedelta(hours=self.fine.hour, minutes=self.fine.minute)
+        if fine <= self._get_start_to_timedelta():
+            fine = fine + timedelta(days=1)
+        return fine
+
+    def get_day_openings(self, day):
+        if day in days:
+            return Orari.objects.all().filter(weekday=self.weekday, location=self.location).order_by('start')
+
+    def durata_apertura(self):
+        start = self._get_start_to_timedelta()
+        fine = self._get_fine_to_timedelta()
+        return fine - start
+
+    def clean(self):
+        allByDay = Orari.objects.all().filter(weekday=self.weekday, location=self.location).exclude(id=self.id)
+        if allByDay:
+            for hour in allByDay:
+                start = hour._get_start_to_timedelta()
+                fine = hour._get_fine_to_timedelta()
+                if start < self._get_start_to_timedelta() < fine:
+                    raise ValidationError(
+                        _('esiste gia un orario {}-{} con che contiene questa ora  1'.format(start, fine)))
+                if start > self._get_start_to_timedelta() > fine:
+                    raise ValidationError(
+                        _('esiste gia un orario {}-{} con che contiene questo  orario provi a mofificarlo 2'.format(
+                            start, fine)))
+                if start < self._get_fine_to_timedelta() <= fine:
+                    raise ValidationError(
+                        _('esiste gia un orario {}-{} con che contiene questo  orario provi a mofificarlo 3'.format(
+                            start, fine))
+                    )
+                if self._get_start_to_timedelta() <= start and self._get_fine_to_timedelta() >= fine:
+                    raise ValidationError(
+                        _('esiste gia un orario {}-{} con che contiene questo  orario provi a mofificarlo 4'.format(
+                            start, fine))
+                    )
+
+
+
+

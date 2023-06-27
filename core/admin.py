@@ -29,4 +29,20 @@ class UserAdmin(admin.ModelAdmin):
 @admin.register(core.models.Address)
 class AddressAdmin(admin.ModelAdmin):
     form = forms.AddressForm
+
+
+@admin.register(core.models.Orari)
+class OrariAdmin(admin.ModelAdmin):
+    list_display = ('weekday','start','fine','durata_apertura')
+    sortable_by = ('weekday','start')
+    ordering = ('start','weekday')
+    list_filter = ('weekday',)
+
+@admin.register(core.models.Location)
+class AdminLocation(admin.ModelAdmin):
+    prepopulated_fields = {
+        'slug': ('name',)
+    }
+
+
 admin.site.unregister(Group)

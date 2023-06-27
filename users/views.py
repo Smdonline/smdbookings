@@ -10,8 +10,9 @@ from django.utils.http import urlsafe_base64_decode
 
 from django.urls import reverse_lazy
 from django.contrib.auth.views import (
-    LoginView, PasswordChangeView, PasswordChangeDoneView
+    LoginView, PasswordChangeView,
 )
+from django.contrib.auth import logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import TemplateView
 
@@ -36,6 +37,11 @@ class UserRegistration(CreateView):
     model = User
     form_class = UserCreationForm
     success_url = reverse_lazy('users:registrationConfirmed')
+
+    def form_valid(self, form):
+        logout(self.request)
+        return super().form_valid(form)
+
 
 
 class UserLoginView(LoginView):
