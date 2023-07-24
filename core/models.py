@@ -77,12 +77,15 @@ def profile_upload_path(instance,filename):
     return os.path.join("locations/%s"%instance.slug, filename)
 class Location(models.Model):
     name = models.CharField(max_length=255, blank=False)
-    slug = models.SlugField(max_length=255,unique=True)
-    address = models.ForeignKey(Address,on_delete=models.CASCADE, default=None)
+    slug = models.SlugField(max_length=255, unique=True)
+    address = models.ForeignKey(Address, on_delete=models.CASCADE, default=None)
     image = models.ImageField(_('location image'), upload_to=profile_upload_path, blank=True)
     description = models.TextField(_('description'), default=None)
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return self.slug
 class Orari(models.Model):
     location = models.ForeignKey(Location, on_delete=models.CASCADE, verbose_name='location_schedule',default=None
                                  )
@@ -91,7 +94,6 @@ class Orari(models.Model):
     )
     start = models.TimeField(_('ora inizio'))
     fine = models.TimeField(_('ora fine'))
-
     class Meta:
         constraints = [
             models.UniqueConstraint(
