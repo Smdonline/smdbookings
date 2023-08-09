@@ -11,7 +11,7 @@ DATABASES = {
         'PASSWORD': os.environ.get('DB_PASS'),
     }
 }
-
+STATIC_ROOT = 'STATICFILES'
 try:
     from .local import *
 except ImportError:

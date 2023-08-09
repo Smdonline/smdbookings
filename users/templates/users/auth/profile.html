@@ -2,5 +2,5 @@
 {% block context %}
     hi{{ user }}
     <a href="{% url 'users:password_change' %}">Change password</a>
-
+    {{ user.user_location }}blalalala
 {% endblock %}

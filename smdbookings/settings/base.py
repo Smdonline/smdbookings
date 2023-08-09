@@ -138,3 +138,4 @@ SITE_ID = 1
 
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 LOGIN_URL = reverse_lazy('users:login')
+SESSION_COOKIE_AGE = 60 * 10

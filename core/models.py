@@ -76,6 +76,7 @@ def profile_upload_path(instance,filename):
     import os
     return os.path.join("locations/%s"%instance.slug, filename)
 class Location(models.Model):
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='user_location')
     name = models.CharField(max_length=255, blank=False)
     slug = models.SlugField(max_length=255, unique=True)
     address = models.ForeignKey(Address, on_delete=models.CASCADE, default=None)

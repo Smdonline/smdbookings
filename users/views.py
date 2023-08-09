@@ -27,7 +27,8 @@ def activate(request, uidb64, token):
     if user is not None and account_activation_token.check_token(user, token) and not user.is_active:
         user.is_active = True
         user.save()
-        return redirect('regConfirmed')
+        logout(request)
+        return redirect('users:registrationConfirmed')
     else:
         return HttpResponse('Activation link is invalid!')
 
@@ -36,7 +37,7 @@ class UserRegistration(CreateView):
     template_name = 'users/registration/registration.html'
     model = User
     form_class = UserCreationForm
-    success_url = reverse_lazy('users:registrationConfirmed')
+    success_url = reverse_lazy('base:main')
 
     def form_valid(self, form):
         logout(self.request)
@@ -47,6 +48,7 @@ class UserRegistration(CreateView):
 class UserLoginView(LoginView):
     template_name = 'users/auth/login.html'
     next_page = reverse_lazy('users:profile')
+    redirect_authenticated_user = True
 
 
 class Profile(LoginRequiredMixin, TemplateView):
@@ -61,7 +63,6 @@ class Profile(LoginRequiredMixin, TemplateView):
 class ChangePasswordView(PasswordChangeView):
     template_name = 'users/registration/password_change_form.html'
     success_url = reverse_lazy('users:password_change_done')
-
 
 
 
