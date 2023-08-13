@@ -61,14 +61,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 """Location models"""
 
 
-class Address(models.Model):
-    country = CountryField(blank=True, default='it')
-    region = models.CharField(_('regione'), blank=False, max_length=255)
-    province = models.CharField(_('provincie'), blank=False, max_length=255)
-    city = models.CharField(_('cita'), max_length=255, blank=False)
-    zip_code = models.CharField(_('CAP'), max_length=5, )
-    street_name = models.CharField(_('via'), max_length=255, blank=False)
-    street_number = models.PositiveSmallIntegerField(_('numero civico'))
 
 def profile_upload_path(instance,filename):
     ext = filename.split(".")[-1]
@@ -79,9 +71,18 @@ class Location(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='user_location')
     name = models.CharField(max_length=255, blank=False)
     slug = models.SlugField(max_length=255, unique=True)
-    address = models.ForeignKey(Address, on_delete=models.CASCADE, default=None)
     image = models.ImageField(_('location image'), upload_to=profile_upload_path, blank=True)
+
     description = models.TextField(_('description'), default=None)
+
+    country = CountryField(blank=True, default='it')
+    region = models.CharField(_('regione'), blank=False, max_length=255)
+    province = models.CharField(_('provincie'), blank=False, max_length=255)
+    city = models.CharField(_('cita'), max_length=255, blank=False)
+    zip_code = models.CharField(_('CAP'), max_length=5, )
+    street_name = models.CharField(_('via'), max_length=255, blank=False)
+    street_number = models.PositiveSmallIntegerField(_('numero civico'))
+
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
 

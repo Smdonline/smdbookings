@@ -31,12 +31,12 @@ class UserChangeForm(BaseUserChangeForm):
         fields = ('name',)
 
 
-class AddressForm(forms.ModelForm):
+class LocationForm(forms.ModelForm):
     zip_code = it_forms.ITZipCodeField()
 
     class Meta:
-        model = core.models.Address
-        fields = '__all__'
+        model = core.models.Location
+        exclude = ('created', 'updated')
         widgets = {
             'region': it_forms.ITRegionSelect,
             'province': it_forms.ITProvinceSelect,

@@ -26,9 +26,6 @@ class UserAdmin(admin.ModelAdmin):
     form = forms.UserCreationForm
 
 
-@admin.register(core.models.Address)
-class AddressAdmin(admin.ModelAdmin):
-    form = forms.AddressForm
 
 
 @admin.register(core.models.Orari)
@@ -43,6 +40,6 @@ class AdminLocation(admin.ModelAdmin):
     prepopulated_fields = {
         'slug': ('name',)
     }
-
+    form = forms.LocationForm
 
 admin.site.unregister(Group)
