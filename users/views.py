@@ -1,20 +1,19 @@
-from django.views.generic import CreateView
-
-from django.shortcuts import HttpResponse, redirect
-from core.tokens import account_activation_token
-from django.utils.encoding import force_str as force_text
 from django.contrib.auth import get_user_model
-from core.forms import UserCreationForm
-from core.models import User
-from django.utils.http import urlsafe_base64_decode
-
-from django.urls import reverse_lazy
+from django.contrib.auth import logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.views import (
     LoginView, PasswordChangeView,
 )
-from django.contrib.auth import logout
-from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import HttpResponse, redirect
+from django.urls import reverse_lazy
+from django.utils.encoding import force_str as force_text
+from django.utils.http import urlsafe_base64_decode
+from django.views.generic import CreateView
 from django.views.generic import TemplateView
+
+from core.forms import UserCreationForm
+from core.models import User
+from core.tokens import account_activation_token
 
 
 def activate(request, uidb64, token):

@@ -1,7 +1,9 @@
-from django.urls import path, include
-from . import views
+from django.urls import path
 from django.views.generic import ListView, DetailView
+
 import core
+from . import views
+
 app_name = 'base'
 
 urlpatterns = [

@@ -1,12 +1,12 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm as BaseCreationForm
 from django.contrib.auth.forms import UserChangeForm as BaseUserChangeForm
+from django.contrib.auth.forms import UserCreationForm as BaseCreationForm
+from django.core.validators import ValidationError
+from localflavor.it import forms as it_forms
 
 import core.models
 from .models import User
 from .utils import send__activation_mail
-from localflavor.it import forms as it_forms
-from django.core.validators import ValidationError
 
 
 class UserCreationForm(BaseCreationForm):

@@ -1,9 +1,10 @@
-from django.shortcuts import render,HttpResponse
-from django.views.generic import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import HttpResponse
 from django.urls import reverse_lazy
-import core.models
 from django.utils.text import slugify
+from django.views.generic import CreateView
+
+import core.models
 
 
 class PassRequestToFormViewMixin:

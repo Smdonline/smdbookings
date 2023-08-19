@@ -1,6 +1,5 @@
 from django.urls import path
-from django.views.generic import ListView, CreateView, DetailView
-from core import models
+
 from . import views
 
 app_name = 'location'

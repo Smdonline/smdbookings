@@ -1,14 +1,13 @@
 from django.contrib import admin
-from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import Group
 from django.shortcuts import get_object_or_404
 
 import core.models
+from . import forms
+from . import utils
 # Register your models here.
 from .models import User
-from . import utils
-from django.contrib.sites.models import Site
-from . import forms
 
 
 @admin.action(description="send user activation link")
@@ -40,6 +39,6 @@ class AdminLocation(admin.ModelAdmin):
     prepopulated_fields = {
         'slug': ('name',)
     }
-    readonly_fields = ('user','name')
+    readonly_fields = ('user',)
 
 admin.site.unregister(Group)

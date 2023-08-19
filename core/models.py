@@ -1,17 +1,17 @@
 """Models for the smdbookings project"""
 
-from django.db import models
+from datetime import timedelta
+
+from django.contrib.auth import get_user_model
 from django.contrib.auth.base_user import (
     AbstractBaseUser,
     BaseUserManager
 )
 from django.contrib.auth.models import PermissionsMixin
+from django.core.validators import ValidationError
+from django.db import models
 from django.utils.translation import gettext_lazy as _
-from django.contrib.auth import get_user_model
 from django_countries.fields import CountryField
-from datetime import timedelta
-from django.core.validators import ValidationError,MinValueValidator,MaxValueValidator
-from localflavor.it import forms, util
 
 days = [
     (0, _("Monday")), (1, _("Tuesday")), (2, _("Wednesday")),

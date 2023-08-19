@@ -1,6 +1,3 @@
-from django.urls import path, reverse_lazy
-from django.utils.translation import gettext_lazy as _
-from django.views.generic import TemplateView
 from django.contrib.auth.views import (
     PasswordChangeDoneView,
     PasswordResetView,
@@ -8,6 +5,10 @@ from django.contrib.auth.views import (
     PasswordResetCompleteView,
     LogoutView
 )
+from django.urls import path, reverse_lazy
+from django.utils.translation import gettext_lazy as _
+from django.views.generic import TemplateView
+
 from . import views
 
 app_name = 'users'
