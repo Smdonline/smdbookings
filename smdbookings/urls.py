@@ -8,8 +8,10 @@ from django.urls import path, include
 
 from users import urls as user_urls
 from base import urls as base_urls
+from location import urls as location_urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include(user_urls)),
+    path('location/', include(user_urls)),
     path('', include(base_urls)),
 ]

@@ -1,7 +1,12 @@
 {% extends 'base/base.html' %}
 {% block title %}
-{% new location for {{ user }} %}
+location for {{ user }}
 {% endblock %}
 {% block content %}
-    add new location
+    <form action="" method="post">
+    {% csrf_token %}
+        {{ form }}
+        <input type="submit" value="add location">
+    </form>
+
 {% endblock %}
