@@ -12,6 +12,6 @@ from location import urls as location_urls
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include(user_urls)),
-    path('location/', include(user_urls)),
+    path('location/', include(location_urls)),
     path('', include(base_urls)),
 ]

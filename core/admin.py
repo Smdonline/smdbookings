@@ -21,7 +21,7 @@ def sent_user_activation_link(modeladmin, request, queryset):
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('email', 'name', 'is_active', 'is_staff')
+    list_display = ('email', 'name', 'locations', 'is_active', 'is_staff')
     actions = [sent_user_activation_link]
     form = forms.UserCreationForm
 
@@ -40,6 +40,6 @@ class AdminLocation(admin.ModelAdmin):
     prepopulated_fields = {
         'slug': ('name',)
     }
-    form = forms.LocationForm
+    readonly_fields = ('user','name','slug')
 
 admin.site.unregister(Group)

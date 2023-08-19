@@ -1,12 +1,32 @@
-from django.shortcuts import render
+from django.shortcuts import render,HttpResponse
 from django.views.generic import CreateView, UpdateView, DeleteView
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.urls import reverse_lazy
 import core.models
+from django.utils.text import slugify
+
+
+class PassRequestToFormViewMixin:
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
 
 
 # Create your views here.
-class AddLocationView(CreateView):
+class AddLocationView(LoginRequiredMixin, PassRequestToFormViewMixin, CreateView):
     template_name = 'location/add_location.html'
     model = core.models.Location
-    fields = '__all__'
-    success_url = reverse_lazy('list')
+    success_url = reverse_lazy('base:list')
+    form_class = core.forms.LocationForm
+
+
+    def form_valid(self, form):
+        my_user = self.request.user
+        if not core.models.Location.objects.filter(user=my_user).count() >= my_user.locations:
+            form.instance.user = my_user
+            form.instance.slug = slugify(form.instance.name)
+            return super().form_valid(form)
+        else:
+            return HttpResponse('nu se poate')
+            # raise ValueError('%s has already a  locations' % my_user)

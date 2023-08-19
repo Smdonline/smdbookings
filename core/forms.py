@@ -6,6 +6,7 @@ import core.models
 from .models import User
 from .utils import send__activation_mail
 from localflavor.it import forms as it_forms
+from django.core.validators import ValidationError
 
 
 class UserCreationForm(BaseCreationForm):
@@ -31,13 +32,26 @@ class UserChangeForm(BaseUserChangeForm):
         fields = ('name',)
 
 
+
+
+
 class LocationForm(forms.ModelForm):
     zip_code = it_forms.ITZipCodeField()
 
     class Meta:
         model = core.models.Location
-        exclude = ('created', 'updated')
+        exclude = ('created', 'updated', 'user', 'slug')
         widgets = {
             'region': it_forms.ITRegionSelect,
             'province': it_forms.ITProvinceSelect,
         }
+
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if core.models.Location.objects.filter(user=self.request.user) >= self.request.user.locations:
+            raise ValidationError('%s has already a location' % self.request.user)
+        return cleaned_data

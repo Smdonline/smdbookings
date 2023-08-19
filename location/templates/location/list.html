@@ -5,5 +5,8 @@
 
 {% block content %}
     locations
-{{ object_list }}
+    {% for object in object_list %}
+        <a href="{% url 'base:detail' object.slug %}">{{ object }}</a>
+     <br>
+    {% endfor %}
 {% endblock %}

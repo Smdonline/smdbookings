@@ -52,6 +52,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     is_staff = models.BooleanField(default=False)
     created = models.DateTimeField(auto_now=True)
     modified = models.DateTimeField(auto_now_add=True)
+    locations = models.PositiveSmallIntegerField(default=1)
 
     objects = UserManager()
 
