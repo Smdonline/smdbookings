@@ -40,6 +40,6 @@ class AdminLocation(admin.ModelAdmin):
     prepopulated_fields = {
         'slug': ('name',)
     }
-    readonly_fields = ('user','name','slug')
+    readonly_fields = ('user','name')
 
 admin.site.unregister(Group)
