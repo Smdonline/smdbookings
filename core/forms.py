@@ -32,9 +32,6 @@ class UserChangeForm(BaseUserChangeForm):
         fields = ('name',)
 
 
-
-
-
 class LocationForm(forms.ModelForm):
     zip_code = it_forms.ITZipCodeField()
 
@@ -52,6 +49,17 @@ class LocationForm(forms.ModelForm):
 
     def clean(self):
         cleaned_data = super().clean()
-        if core.models.Location.objects.filter(user=self.request.user) >= self.request.user.locations:
+        if core.models.Location.objects.filter(user=self.request.user).count() >= self.request.user.locations:
             raise ValidationError('%s has already a location' % self.request.user)
         return cleaned_data
+
+
+class OrariForm(forms.ModelForm):
+    class Meta:
+        model = core.models.Orari
+        fields = ('weekday', 'start', 'fine')
+
+    def __init__(self, **kwargs):
+        initial = kwargs.get("initial", {})
+
+        super().__init__(**kwargs)

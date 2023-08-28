@@ -2,6 +2,20 @@
 {% block content %}
     hi{{ user }}
     <a href="{% url 'users:password_change' %}">Change password</a>
-    {{ user.user_location }}blalalala
+    {% if user.user_location.count %}
+        {% with user.user_location.all as my_locations %}
+            {% for location in my_locations %}
+                <a href="{% url 'location:edit' location.slug  %}">{{ location }}</a>
+                <br>
+                <a href="{% url 'location:delete' location.slug %}">delete</a>
+                <a href="{% url 'orari:add_orario' location.slug %}">add orario</a>
+
+        {% endfor %}
+        {% endwith %}
+    {% else %}
+        <a href="{% url 'location:add' %}">add location</a>
+    {% endif %}
+
+
     <a href="{% url 'base:list' %}">locations</a>
 {% endblock %}

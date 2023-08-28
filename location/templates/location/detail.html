@@ -1,8 +1,24 @@
 {% include 'base/base.html' %}
+{% load static %}
 {% block title %}
 
 {% endblock %}
 
 {% block content %}
-    {{ object }}
+    {{ object.name }}<br>
+
+    {% for orar in object.orariile_mele.all %}
+        {{ orar.get_day_name }} : {{ orar.start }} -- {{ orar.fine }}<br>
+    {% endfor %}
+
+    {{ object.description}}<br>
+    <img src="{{object.image.url }}" width="540" height="350">
+   <br>
+    {{ object.country }}<br>
+    {{ object.region }}<br>
+    {{ object.province }}<br>
+    {{ object.city }}<br>
+    {{ object.sip_code }}<br>
+    {{ object.street_name }}<br>
+    {{ object.street_number }}<br>
 {% endblock %}

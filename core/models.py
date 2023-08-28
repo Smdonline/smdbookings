@@ -65,9 +65,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 def profile_upload_path(instance,filename):
     ext = filename.split(".")[-1]
-    filename="%s.%s"%(instance.slug, ext)
+    filename="%s.%s" % (instance.slug, ext)
     import os
-    return os.path.join("locations/%s"%instance.slug, filename)
+    return os.path.join("media/locations/%s/%s" % (instance.user, instance.slug), filename)
 class Location(models.Model):
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, related_name='user_location')
     name = models.CharField(max_length=255, blank=False)
@@ -89,9 +89,14 @@ class Location(models.Model):
 
     def __str__(self):
         return self.slug
+    def orariile_mele(self):
+        return self.location_schedule.order_by('weekday', 'start')
 class Orari(models.Model):
-    location = models.ForeignKey(Location, on_delete=models.CASCADE, verbose_name='location_schedule',default=None
-                                 )
+    location = models.ForeignKey(
+        Location, on_delete=models.CASCADE,
+        related_name='location_schedule',
+        default=None)
+
     weekday = models.PositiveSmallIntegerField(
         _('nome giorno settimana'), choices=days
     )
