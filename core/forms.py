@@ -3,7 +3,7 @@ from django.contrib.auth.forms import UserChangeForm as BaseUserChangeForm
 from django.contrib.auth.forms import UserCreationForm as BaseCreationForm
 from django.core.validators import ValidationError
 from localflavor.it import forms as it_forms
-
+from django.utils.translation import gettext_lazy as _
 import core.models
 from .models import User
 from .utils import send__activation_mail
@@ -66,31 +66,32 @@ class OrariForm(forms.ModelForm):
         }
     def  clean(self):
         clean_data = super().clean()
-        print(clean_data)
-        return clean_data
 
-    # def clean(self):
-    #     clean_data = super().clean()
-    #     weekday = clean_data.get('weekday')
-    #     allByDay = Orari.objects.all().filter(weekday=weekday, location=self.location).exclude(id=self.id)
-    #     if allByDay:
-    #         for hour in allByDay:
-    #             start = hour._get_start_to_timedelta()
-    #             fine = hour._get_fine_to_timedelta()
-    #             if start < self._get_start_to_timedelta() < fine:
-    #                 raise ValidationError(
-    #                     _('esiste gia un orario {}-{} con che contiene questa ora  1'.format(start, fine)))
-    #             if start > self._get_start_to_timedelta() > fine:
-    #                 raise ValidationError(
-    #                     _('esiste gia un orario {}-{} con che contiene questo  orario provi a mofificarlo 2'.format(
-    #                         start, fine)))
-    #             if start < self._get_fine_to_timedelta() <= fine:
-    #                 raise ValidationError(
-    #                     _('esiste gia un orario {}-{} con che contiene questo  orario provi a mofificarlo 3'.format(
-    #                         start, fine))
-    #                 )
-    #             if self._get_start_to_timedelta() <= start and self._get_fine_to_timedelta() >= fine:
-    #                 raise ValidationError(
-    #                     _('esiste gia un orario {}-{} con che contiene questo  orario provi a mofificarlo 4'.format(
-    #                         start, fine))
-    #                 )
+        orar = core.models.Orari(
+            location=clean_data.get('location'),
+            weekday=clean_data.get('weekday'),
+            start=clean_data.get('start'),
+            fine=clean_data.get('fine')
+        )
+        allByDay = core.models.Orari.objects.all().filter(weekday=orar.weekday, location=orar.location)
+        if allByDay:
+            for hour in allByDay:
+                start = hour.get_start_to_timedelta()
+                fine = hour.get_fine_to_timedelta()
+                if start < orar.get_start_to_timedelta() < fine:
+                    raise ValidationError(
+                        _('esiste gia un orario %s con che contiene questa ora %s' % (hour, start))
+                    )
+                if start > orar.get_start_to_timedelta() > fine:
+                    raise ValidationError(
+                        _('esiste gia un orario %s con che contiene questo  orario provi a mofificarlo ' % hour)
+                    )
+                if start < orar.get_fine_to_timedelta() <= fine:
+                    raise ValidationError(
+                        _('esiste gia un orario %s con che contiene questo  orario provi a mofificarlo ' % hour)
+                    )
+                if orar.get_start_to_timedelta() <= start and orar.get_fine_to_timedelta() >= fine:
+                    raise ValidationError(
+                        _('esiste gia un orario %s con che contiene questo  orario provi a mofificarlo ' % hour)
+                    )
+        return clean_data

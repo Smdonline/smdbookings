@@ -13,8 +13,9 @@ from orari import urls as orari_urls
 from django.conf import settings
 from django.conf.urls.static import static
 urlpatterns = [
-    path('', include(base_urls)),
     path('admin/', admin.site.urls),
+    path('', include(base_urls)),
+
     path('users/', include(user_urls)),
     path('location/', include(location_urls)),
     path('location/orari/', include(orari_urls)),

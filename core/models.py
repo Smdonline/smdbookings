@@ -116,12 +116,12 @@ class Orari(models.Model):
     def get_day_name(self):
         return days[self.weekday][1]
 
-    def _get_start_to_timedelta(self):
+    def get_start_to_timedelta(self):
         return timedelta(hours=self.start.hour, minutes=self.start.minute)
 
-    def _get_fine_to_timedelta(self):
+    def get_fine_to_timedelta(self):
         fine = timedelta(hours=self.fine.hour, minutes=self.fine.minute)
-        if fine <= self._get_start_to_timedelta():
+        if fine <= self.get_start_to_timedelta():
             fine = fine + timedelta(days=1)
         return fine
 
@@ -130,12 +130,9 @@ class Orari(models.Model):
             return Orari.objects.all().filter(weekday=self.weekday, location=self.location).order_by('start')
 
     def durata_apertura(self):
-        start = self._get_start_to_timedelta()
-        fine = self._get_fine_to_timedelta()
+        start = self.get_start_to_timedelta()
+        fine = self.get_fine_to_timedelta()
         return fine - start
 
     def __str__(self):
-        return self.location.slug
-
-
-
+        return '(%s -- %s)' % (self.start, self.fine)
