@@ -134,30 +134,8 @@ class Orari(models.Model):
         fine = self._get_fine_to_timedelta()
         return fine - start
 
-    def clean(self):
-        allByDay = Orari.objects.all().filter(weekday=self.weekday, location=self.location).exclude(id=self.id)
-        if allByDay:
-            for hour in allByDay:
-                start = hour._get_start_to_timedelta()
-                fine = hour._get_fine_to_timedelta()
-                if start < self._get_start_to_timedelta() < fine:
-                    raise ValidationError(
-                        _('esiste gia un orario {}-{} con che contiene questa ora  1'.format(start, fine)))
-                if start > self._get_start_to_timedelta() > fine:
-                    raise ValidationError(
-                        _('esiste gia un orario {}-{} con che contiene questo  orario provi a mofificarlo 2'.format(
-                            start, fine)))
-                if start < self._get_fine_to_timedelta() <= fine:
-                    raise ValidationError(
-                        _('esiste gia un orario {}-{} con che contiene questo  orario provi a mofificarlo 3'.format(
-                            start, fine))
-                    )
-                if self._get_start_to_timedelta() <= start and self._get_fine_to_timedelta() >= fine:
-                    raise ValidationError(
-                        _('esiste gia un orario {}-{} con che contiene questo  orario provi a mofificarlo 4'.format(
-                            start, fine))
-                    )
-
+    def __str__(self):
+        return self.location.slug
 
 
 

@@ -57,9 +57,40 @@ class LocationForm(forms.ModelForm):
 class OrariForm(forms.ModelForm):
     class Meta:
         model = core.models.Orari
-        fields = ('weekday', 'start', 'fine')
+        fields = ('location', 'weekday', 'start', 'fine')
+        widgets = {
+            'weekday': forms.Select(attrs={'class': 'form-select'}),
+            'user': forms.HiddenInput(),
+            'start': forms.TimeInput(attrs={'type': 'time', 'class': 'form-select'}),
+            'fine': forms.TimeInput(attrs={'type': 'time', 'class': 'form-select'})
+        }
+    def  clean(self):
+        clean_data = super().clean()
+        print(clean_data)
+        return clean_data
 
-    def __init__(self, **kwargs):
-        initial = kwargs.get("initial", {})
-
-        super().__init__(**kwargs)
+    # def clean(self):
+    #     clean_data = super().clean()
+    #     weekday = clean_data.get('weekday')
+    #     allByDay = Orari.objects.all().filter(weekday=weekday, location=self.location).exclude(id=self.id)
+    #     if allByDay:
+    #         for hour in allByDay:
+    #             start = hour._get_start_to_timedelta()
+    #             fine = hour._get_fine_to_timedelta()
+    #             if start < self._get_start_to_timedelta() < fine:
+    #                 raise ValidationError(
+    #                     _('esiste gia un orario {}-{} con che contiene questa ora  1'.format(start, fine)))
+    #             if start > self._get_start_to_timedelta() > fine:
+    #                 raise ValidationError(
+    #                     _('esiste gia un orario {}-{} con che contiene questo  orario provi a mofificarlo 2'.format(
+    #                         start, fine)))
+    #             if start < self._get_fine_to_timedelta() <= fine:
+    #                 raise ValidationError(
+    #                     _('esiste gia un orario {}-{} con che contiene questo  orario provi a mofificarlo 3'.format(
+    #                         start, fine))
+    #                 )
+    #             if self._get_start_to_timedelta() <= start and self._get_fine_to_timedelta() >= fine:
+    #                 raise ValidationError(
+    #                     _('esiste gia un orario {}-{} con che contiene questo  orario provi a mofificarlo 4'.format(
+    #                         start, fine))
+    #                 )
