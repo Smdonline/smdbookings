@@ -36,3 +36,17 @@ class UpdateOrari(LoginRequiredMixin, UpdateView):
         if orar.location.user == self.request.user:
             return super().dispatch(request, *args, **kwargs)
         raise Http404
+
+
+class ListOrariForEdit(LoginRequiredMixin,ListView):
+    template_name = 'orari/dash.html'
+    model = core.models.Orari
+    context_object_name = 'orari'
+    def get_queryset(self):
+        location=get_object_or_404(self.model, slug=self.kwargs.get('slug'))
+        return location.location_schedule.order_by('weekday', 'start')
+    def dispatch(self, request, *args, **kwargs):
+        location = get_object_or_404(core.models.Location, slug=kwargs.get('slug'))
+        if location.user == self.request.user:
+            return super().dispatch(request, *args, **kwargs)
+        raise Http404
