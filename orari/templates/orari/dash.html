@@ -3,6 +3,17 @@
 location for {{ user }}
 {% endblock %}
 {% block content %}
-    list orari
+    {{ location }}<br>
+    {% for zi,orari in location.get_orari.items %}
+        {{ zi }}
+        {% for foo in orari %}
+           <b>{{ foo.start }} - {{ foo.fine }}</b>
+            <b> | </b>
+        {% endfor %}
+        <a href="{% url 'orari:add_orario' location.slug  forloop.counter0 %}">+</a>
+        <br>
+
+    {% endfor %}
+
 
 {% endblock %}

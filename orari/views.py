@@ -10,7 +10,7 @@ import core.models
 
 class CreateOrarioView(LoginRequiredMixin, CreateView):
     template_name = 'orari/add.html'
-    success_url = reverse_lazy('users:profile')
+    success_url = reverse_lazy('users: dash_orario')
     model = core.models.Orari
     form_class = core.forms.OrariForm
 
@@ -43,10 +43,16 @@ class ListOrariForEdit(LoginRequiredMixin,ListView):
     model = core.models.Orari
     context_object_name = 'orari'
     def get_queryset(self):
-        location=get_object_or_404(self.model, slug=self.kwargs.get('slug'))
+        location=get_object_or_404(core.models.Location, slug=self.kwargs.get('slug'))
         return location.location_schedule.order_by('weekday', 'start')
     def dispatch(self, request, *args, **kwargs):
         location = get_object_or_404(core.models.Location, slug=kwargs.get('slug'))
         if location.user == self.request.user:
             return super().dispatch(request, *args, **kwargs)
         raise Http404
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        location = get_object_or_404(core.models.Location, slug=self.kwargs.get('slug'))
+
+        context['location'] = location
+        return context

@@ -8,7 +8,7 @@
                 <a href="{% url 'location:edit' location.slug  %}">{{ location }}</a>
                 <br>
                 <a href="{% url 'location:delete' location.slug %}">delete</a>
-                <a href="{% url 'orari:add_orario' location.slug %}">add orario</a>
+                <a href="{% url 'orari:dash_orario' location.slug %}">dash orario</a>
 
         {% endfor %}
         {% endwith %}
