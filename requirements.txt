@@ -1,4 +1,4 @@
-Django
+maDjango
 phonenumbers
 django-localflavor
 django-countries[pyuca]

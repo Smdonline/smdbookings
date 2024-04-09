@@ -91,12 +91,11 @@ class Location(models.Model):
         return self.slug
     def get_orari(self):
         querry = Orari.objects.filter(location=self)
-        if querry:
-            orari = {}
-            for numar, zi in days:
-                orari[zi] = [i for i in querry if i.weekday == numar]
-            return orari
-        return None
+
+        orari = {}
+        for numar, zi in days:
+            orari[zi] = [i for i in querry if i.weekday == numar]
+        return orari
 
     def orariile_mele(self):
         return self.location_schedule.order_by('weekday', 'start')

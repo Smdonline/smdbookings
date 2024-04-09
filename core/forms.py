@@ -47,6 +47,7 @@ class LocationForm(forms.ModelForm):
         self.request = kwargs.pop("request")
         super().__init__(*args, **kwargs)
 
+
     def clean(self):
         cleaned_data = super().clean()
         if core.models.Location.objects.filter(user=self.request.user).count() >= self.request.user.locations:
@@ -64,6 +65,10 @@ class OrariForm(forms.ModelForm):
             'start': forms.TimeInput(attrs={'type': 'time', 'class': 'form-select'}),
             'fine': forms.TimeInput(attrs={'type': 'time', 'class': 'form-select'})
         }
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop("request")
+        super().__init__(*args, **kwargs)
+        self.fields['location'].queryset = core.models.Location.objects.all().filter(user=self.request.user)
     def  clean(self):
         clean_data = super().clean()
 

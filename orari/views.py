@@ -6,11 +6,11 @@ from django.utils.text import slugify
 from django.views.generic import CreateView, UpdateView, DeleteView, ListView
 from core.forms import OrariForm
 import core.models
+from core.views import PassRequestToFormViewMixin
 
-
-class CreateOrarioView(LoginRequiredMixin, CreateView):
+class CreateOrarioView(LoginRequiredMixin, PassRequestToFormViewMixin,CreateView):
     template_name = 'orari/add.html'
-    success_url = reverse_lazy('users: dash_orario')
+    success_url = reverse_lazy('orari:dash_orario')
     model = core.models.Orari
     form_class = core.forms.OrariForm
 
@@ -24,6 +24,8 @@ class CreateOrarioView(LoginRequiredMixin, CreateView):
                 weekday = day
         return {'location': location, 'weekday': weekday, 'stars': '09:00'}
 
+    def get_success_url(self):
+        return reverse_lazy('orari:dash_orario',args=[self.kwargs.get('slug')])
 
 class UpdateOrari(LoginRequiredMixin, UpdateView):
     template_name = 'orari/add.html'

@@ -5,13 +5,7 @@ from django.utils.text import slugify
 from django.views.generic import CreateView, UpdateView, DeleteView
 
 import core.models
-
-
-class PassRequestToFormViewMixin:
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['request'] = self.request
-        return kwargs
+from core.views import PassRequestToFormViewMixin
 
 
 # Create your views here.
