@@ -1,5 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import HttpResponse, get_object_or_404, Http404
+from django.shortcuts import HttpResponse, get_object_or_404, Http404, redirect
 from django.urls import reverse_lazy
 from django.contrib.auth.decorators import login_required
 from django.utils.text import slugify
@@ -27,6 +27,12 @@ class CreateOrarioView(LoginRequiredMixin, PassRequestToFormViewMixin,CreateView
     def get_success_url(self):
         return reverse_lazy('orari:dash_orario',args=[self.kwargs.get('slug')])
 
+    def dispatch(self, request, *args, **kwargs):
+        loc = get_object_or_404(core.models.Location, slug=self.kwargs.get('slug'))
+        if loc.user == self.request.user:
+            return super().dispatch(request, *args, **kwargs)
+        return redirect(reverse_lazy('users:profile'))
+        raise Http404
 class UpdateOrari(LoginRequiredMixin, UpdateView):
     template_name = 'orari/add.html'
     success_url = reverse_lazy('users:profile')
@@ -37,8 +43,12 @@ class UpdateOrari(LoginRequiredMixin, UpdateView):
         orar = get_object_or_404(core.models.Orari, id=kwargs.get('pk'))
         if orar.location.user == self.request.user:
             return super().dispatch(request, *args, **kwargs)
+        return redirect(reverse_lazy('users:profile'))
         raise Http404
 
+    def get_success_url(self):
+        orar = get_object_or_404(core.models.Orari, id=self.kwargs.get('pk'))
+        return reverse_lazy('orari:dash_orario', args=[orar.location.slug])
 
 class ListOrariForEdit(LoginRequiredMixin,ListView):
     template_name = 'orari/dash.html'
@@ -51,6 +61,7 @@ class ListOrariForEdit(LoginRequiredMixin,ListView):
         location = get_object_or_404(core.models.Location, slug=kwargs.get('slug'))
         if location.user == self.request.user:
             return super().dispatch(request, *args, **kwargs)
+        return redirect(reverse_lazy('users:profile'))
         raise Http404
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -58,3 +69,12 @@ class ListOrariForEdit(LoginRequiredMixin,ListView):
 
         context['location'] = location
         return context
+
+
+class DeleteOrario(LoginRequiredMixin, DeleteView):
+    template_name = 'orari/delete.html'
+    model = core.models.Orari
+
+    def get_success_url(self):
+        orar = get_object_or_404(core.models.Orari, id=self.kwargs.get('pk'))
+        return reverse_lazy('orari:dash_orario', args=[orar.location.slug])
